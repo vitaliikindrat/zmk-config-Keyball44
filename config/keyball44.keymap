@@ -75,7 +75,7 @@
         symbol_layer {
             label = "SYM";
             bindings = <
-&kp TILDE  &kp NUMBER_1     &kp NUMBER_2   &kp HASH      &kp DOLLAR  &kp PERCENT                    &kp NUMBER_6    &kp N7            &kp N8             &kp N9                &kp N0                 &kp RIGHT_BRACKET
+&kp TILDE  &kp NUMBER_1     &kp NUMBER_2   &kp NUMBER_3  &kp DOLLAR  &kp PERCENT                    &kp NUMBER_6    &kp N7            &kp N8             &kp N9                &kp N0                 &kp RIGHT_BRACKET
 &trans     &kp EXCLAMATION  &kp AT_SIGN    &kp HASH      &kp DOLLAR  &kp PERCENT                    &kp UNDERSCORE  &kp LEFT_BRACE    &kp RIGHT_BRACE    &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp SQT
 &trans     &kp CARET        &kp AMPERSAND  &kp ASTERISK  &kp EQUAL   &kp DOUBLE_QUOTES              &kp PIPE        &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp MINUS             &kp PLUS               &kp NON_US_BACKSLASH
 &trans     &trans           &trans         &trans        &trans                             &trans  &trans                                                                                            &trans
