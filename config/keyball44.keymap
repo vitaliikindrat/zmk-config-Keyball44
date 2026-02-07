@@ -96,7 +96,7 @@
             label = "MOUSE";
             bindings = <
 &none         &none           &none           &none         &none      &none              &kp N6         &kp N7     &kp N8  &kp N9     &kp N0     &none
-&lt 6 ESCAPE  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp UP_ARROW  &kp RIGHT  &none              &kp PAGE_UP    &mkp LCLK  &none   &mkp RCLK  &mkp MCLK  &none
+&lt 6 ESCAPE  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp UP_ARROW  &kp RIGHT  &none              &kp PAGE_UP    &mkp LCLK  &none   &mkp RCLK  &mkp MCLK  &kp BACKSPACE
 &mo 6         &none           &none           &none         &none      &none              &kp PAGE_DOWN  &none      &none   &none      &none      &mo 5
 &trans        &trans          &trans          &trans        &trans                &trans  &trans                                                  &mo 6
             >;
@@ -105,20 +105,20 @@
         scroll_layer {
             label = "SCROLL";
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans              &trans  &trans                                  &trans
+&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans     &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans              &trans  &mkp LCLK  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans     &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans              &trans  &trans                                     &trans
             >;
         };
 
         snipe_layer {
             label = "SNIPE";
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans              &trans  &trans                                  &trans
+&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans     &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans              &trans  &mkp LCLK  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans     &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans              &trans  &trans                                     &trans
             >;
         };
     };
