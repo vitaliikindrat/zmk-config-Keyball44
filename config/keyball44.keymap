@@ -69,7 +69,7 @@
             label = "NAV";
             bindings = <
 &none   &kp LG(NUMBER_1)  &kp LG(NUMBER_2)  &kp LG(NUMBER_3)  &kp LG(NUMBER_4)  &none                     &none         &kp LC(U)      &kp LC(I)     &kp LC(O)        &none         &none
-&none   &kp LEFT          &kp LA(S)         &kp LC(D)         &kp RIGHT         &kp PERCENT               &kp LEFT      &kp DOWN       &kp UP_ARROW  &kp RIGHT_ARROW  &none         &kp DEL
+&none   &kp LC(F7)        &kp LA(S)         &kp LC(D)         &kp LC(F8)        &kp PERCENT               &kp LEFT      &kp DOWN       &kp UP_ARROW  &kp RIGHT_ARROW  &none         &kp DEL
 &none   &kp LC(LEFT)      &kp LC(RIGHT)     &none             &none             &none                     &kp HOME      &kp PAGE_DOWN  &kp PAGE_UP   &kp END          &none         &none
 &trans  &trans            &trans            &trans            &trans                              &trans  &mo 3                                                                     &trans
             >;
@@ -98,10 +98,10 @@
         mouse_layer {
             label = "MOUSE";
             bindings = <
-&none         &none           &none           &none         &none      &none              &kp N6         &kp N7     &kp N8  &kp N9     &kp N0     &none
-&lt 6 ESCAPE  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp UP_ARROW  &kp RIGHT  &none              &kp PAGE_UP    &mkp LCLK  &none   &mkp RCLK  &mkp MCLK  &kp BACKSPACE
-&mo 6         &none           &none           &none         &none      &none              &kp PAGE_DOWN  &none      &none   &none      &none      &mo 5
-&trans        &trans          &trans          &trans        &trans                &trans  &trans                                                  &mo 6
+&none         &none  &none  &none  &none  &none              &none          &none      &none   &none      &none      &none
+&lt 6 ESCAPE  &none  &none  &none  &none  &none              &kp PAGE_UP    &mkp LCLK  &none   &mkp RCLK  &mkp MCLK  &kp BACKSPACE
+&mo 6         &none  &none  &none  &none  &none              &kp PAGE_DOWN  &none      &none   &none      &none      &mo 5
+&trans        &trans &trans &trans &trans            &trans  &trans                                                  &mo 6
             >;
         };
 
