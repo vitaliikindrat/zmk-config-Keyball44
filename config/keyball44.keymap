@@ -6,6 +6,7 @@
 #define SCROLL  5
 #define SNIPE   6
 #define MACOS   7
+#define DE      8
 
 #include <behaviors/mouse_keys.dtsi>
 #include <dt-bindings/zmk/mouse.h>
@@ -69,9 +70,9 @@
             label = "NAV";
             bindings = <
 &none   &kp LG(NUMBER_1)  &kp LG(NUMBER_2)  &kp LG(NUMBER_3)  &kp LG(NUMBER_4)  &none                     &none         &kp LC(U)      &kp LC(I)     &kp LC(O)        &none         &none
-&none   &kp LC(F7)        &kp LA(S)         &kp LC(D)         &kp LC(F8)        &kp PERCENT               &kp LEFT      &kp DOWN       &kp UP_ARROW  &kp RIGHT_ARROW  &none         &kp DEL
+&none   &kp LA(DOT)       &kp LA(S)         &kp LC(D)         &kp LA(K)         &kp PERCENT               &kp LEFT      &kp DOWN       &kp UP_ARROW  &kp RIGHT_ARROW  &none         &kp DEL
 &none   &kp LC(LEFT)      &kp LC(RIGHT)     &none             &none             &none                     &kp HOME      &kp PAGE_DOWN  &kp PAGE_UP   &kp END          &none         &none
-&trans  &trans            &trans            &trans            &trans                              &trans  &mo 3                                                                     &trans
+&trans  &trans            &mo 8             &trans            &trans                              &trans  &mo 3                                                                     &trans
             >;
         };
 
@@ -132,6 +133,16 @@
 &lt 1 ESCAPE  &mt LCTRL A     &mt LEFT_ALT S  &mt LGUI D   &mt LEFT_SHIFT F  &kp G                 &kp H      &mt LEFT_SHIFT J  &mt LGUI K   &mt LEFT_ALT L  &kp SEMI   &kp BACKSPACE
 &kp MINUS     &kp Z           &kp X           &kp C        &kp V             &kp B                 &kp N      &kp M             &kp COMMA    &kp DOT         &kp SLASH  &lt 5 NON_US_BACKSLASH
 &mkp LCLK     &kp LEFT_SHIFT  &kp LCTRL       &mo 2        &kp SPACE                    &kp ENTER  &kp COLON                                                            &caps_word
+            >;
+        };
+
+        de_layer {
+            label = "DE";
+            bindings = <
+&none   &kp LA(F4)        &kp LC(F8)        &kp LG(E)         &none             &none                     &none   &none  &none  &none  &none  &none
+&none   &kp LC(F7)        &kp LC(F9)        &kp LG(D)         &kp LC(F10)       &none                     &none   &none  &none  &none  &none  &none
+&none   &kp LC(LA(LEFT))  &kp LC(LA(RIGHT)) &none             &none             &none                     &none   &none  &none  &none  &none  &none
+&trans  &trans            &trans            &trans            &trans                              &trans  &trans                                    &trans
             >;
         };
     };
