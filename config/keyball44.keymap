@@ -1,10 +1,11 @@
-#define DEFAULT 0
+#define LINUX   0
 #define NAV     1
 #define SYM     2
 #define FUN     3
 #define MOUSE   4
 #define SCROLL  5
 #define SNIPE   6
+#define MACOS   7
 
 #include <behaviors/mouse_keys.dtsi>
 #include <dt-bindings/zmk/mouse.h>
@@ -54,8 +55,8 @@
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
-            label = "QWRT";
+        linux_layer {
+            label = "LINUX";
             bindings = <
 &kp TAB       &kp Q           &kp W           &kp E        &kp R             &kp T                 &kp Y      &kp U             &kp I        &kp O           &kp P      &kp LEFT_BRACKET
 &lt 1 ESCAPE  &mt LEFT_GUI A  &mt LEFT_ALT S  &mt LCTRL D  &mt LEFT_SHIFT F  &kp G                 &kp H      &mt LEFT_SHIFT J  &mt LCTRL K  &mt LEFT_ALT L  &kp SEMI   &kp BACKSPACE
@@ -87,10 +88,10 @@
         function_layer {
             label = "FUN";
             bindings = <
-&none   &kp F1  &kp F2   &kp F3   &kp F4   &none              &none  &none  &none  &none  &none  &bt BT_SEL 0
-&none   &kp F5  &kp F6   &kp F7   &kp F8   &none              &none  &none  &none  &none  &none  &bt BT_SEL 1
-&none   &kp F9  &kp F10  &kp F11  &kp F12  &none              &none  &none  &none  &none  &none  &bt BT_SEL 2
-&trans  &trans  &trans   &trans   &trans              &trans  &mo 3                              &trans
+&none   &kp F1  &kp F2   &kp F3   &kp F4   &none              &none    &none     &none  &none  &none  &bt BT_SEL 0
+&none   &kp F5  &kp F6   &kp F7   &kp F8   &none              &to 0    &to 7     &none  &none  &none  &bt BT_SEL 1
+&none   &kp F9  &kp F10  &kp F11  &kp F12  &none              &none    &none     &none  &none  &none  &bt BT_SEL 2
+&trans  &trans  &trans   &trans   &trans              &trans  &mo 3                                &trans
             >;
         };
 
@@ -121,6 +122,16 @@
 &trans  &trans  &trans  &trans  &trans  &trans              &trans  &mkp LCLK  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans     &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans              &trans  &trans                                     &trans
+            >;
+        };
+
+        macos_layer {
+            label = "MACOS";
+            bindings = <
+&kp TAB       &kp Q           &kp W           &kp E        &kp R             &kp T                 &kp Y      &kp U             &kp I        &kp O           &kp P      &kp LEFT_BRACKET
+&lt 1 ESCAPE  &mt LCTRL A     &mt LEFT_ALT S  &mt LGUI D   &mt LEFT_SHIFT F  &kp G                 &kp H      &mt LEFT_SHIFT J  &mt LGUI K   &mt LEFT_ALT L  &kp SEMI   &kp BACKSPACE
+&kp MINUS     &kp Z           &kp X           &kp C        &kp V             &kp B                 &kp N      &kp M             &kp COMMA    &kp DOT         &kp SLASH  &lt 5 NON_US_BACKSLASH
+&mkp LCLK     &kp LEFT_SHIFT  &kp LCTRL       &mo 2        &kp SPACE                    &kp ENTER  &kp COLON                                                            &caps_word
             >;
         };
     };
