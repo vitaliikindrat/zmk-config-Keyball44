@@ -68,7 +68,7 @@
         nav_layer {
             label = "NAV";
             bindings = <
-&none   &kp LG(NUMBER_1)  &kp LG(NUMBER_2)  &kp LG(NUMBER_3)  &kp LG(NUMBER_4)  &none                     &none         &kp LC(U)      &kp LC(I)     &kp LC(O)        &none         &none
+&kp GRAVE  &kp LG(NUMBER_1)  &kp LG(NUMBER_2)  &kp LG(NUMBER_3)  &kp LG(NUMBER_4)  &none                     &none         &kp LC(U)      &kp LC(I)     &kp LC(O)        &none         &none
 &none   &kp LA(DOT)       &kp LA(S)         &kp LC(D)         &kp LA(K)         &kp PERCENT               &kp LEFT      &kp DOWN       &kp UP_ARROW  &kp RIGHT_ARROW  &none         &kp DEL
 &none   &kp LC(LEFT)      &kp LC(RIGHT)     &none             &none             &none                     &kp HOME      &kp PAGE_DOWN  &kp PAGE_UP   &kp END          &none         &none
 &trans  &trans            &mo 7             &trans            &trans                              &trans  &mo 3                                                                     &trans
@@ -128,10 +128,10 @@
         de_layer {
             label = "DE";
             bindings = <
-&none   &kp LA(F4)        &kp LC(F8)        &kp LG(E)         &none             &none                     &none   &none  &none  &none  &none  &none
-&none   &kp LC(F7)        &kp LC(F9)        &kp LG(D)         &kp LC(F10)       &none                     &none   &none  &none  &none  &none  &none
-&none   &kp LC(LA(LEFT))  &kp LC(LA(RIGHT)) &none             &none             &none                     &none   &none  &none  &none  &none  &none
-&trans  &trans            &trans            &trans            &trans                              &trans  &trans                                    &trans
+&none   &kp LA(F4)        &kp LC(F8)         &kp LG(E)          &none           &none                     &none   &kp LG(LEFT)          &kp LG(UP)         &kp LG(RIGHT)          &none               &none
+&none   &kp LC(F7)        &kp LC(F9)         &kp LG(D)          &kp LC(F10)     &none                     &none   &kp LG(LC(LEFT))      &kp LG(LC(DOWN))   &kp LG(LC(UP))         &kp LG(LC(RIGHT))   &none
+&none   &kp LC(LA(LEFT))  &kp LC(LA(RIGHT))  &kp LC(LA(DOWN))   &kp LC(LA(UP))  &none                     &none   &kp LC(LA(LS(LEFT)))  &kp LG(DOWN)       &kp LC(LA(LS(RIGHT)))  &none               &none
+&trans  &trans            &trans             &trans             &trans                              &trans  &trans                                                                                      &trans
             >;
         };
     };
