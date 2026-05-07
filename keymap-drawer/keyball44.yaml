@@ -36,7 +36,7 @@ layers:
   - {t: ',', s: <}
   - {t: ., s: '>'}
   - {t: /, s: '?'}
-  - {t: \, h: SCROLL}
+  - {t: \, h: SCROLL, s: '|'}
   - $$mdi:mouse-left-click-outline$$
   - $$mdi:apple-keyboard-shift$$
   - $$mdi:apple-keyboard-control$$
@@ -126,7 +126,7 @@ layers:
   - {t: ']', s: '}'}
   - {t: '-', s: _}
   - +
-  - \
+  - {t: \, s: '|'}
   - {t: '$$mdi:transfer$$', type: trans}
   - {t: '$$mdi:transfer$$', type: trans}
   - {t: '$$mdi:transfer$$', type: trans}
