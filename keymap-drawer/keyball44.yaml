@@ -127,8 +127,8 @@ layers:
   - {t: '-', s: _}
   - +
   - {t: \, s: '|'}
-  - {t: '=', s: +}
-  - '*'
+  - Ctl+F7
+  - Ctl+F9
   - COPY
   - {t: '$$mdi:transfer$$', type: trans}
   - PASTE
