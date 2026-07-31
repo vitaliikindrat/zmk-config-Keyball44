@@ -5,13 +5,24 @@
  * sticky MUX, tap-then-hold = held MUX), zellij MUX layer, helix NAV
  * layer with tri-state swappers.
  *
+ * ANCHOR: Linux-truth + macOS per-device modifier swap. macOS System
+ * Settings > Keyboard > Modifier Keys (for THIS keyboard only) swaps
+ * Ctrl <-> Cmd. Firmware emits Linux-native chords; mac receives Ctrl
+ * as Cmd and Gui as Ctrl. Chords holding BOTH Ctrl and Gui are
+ * swap-invariant (window quad). Ctrl-chords = command space,
+ * Super-chords = window/desktop space.
+ *
  * Redesign vs main:
  *   CMD (9)  — semantic command layer on the left thumb (old LCTRL slot):
- *              copy/paste/tab/find etc. as mnemonic keys, one-handed with
- *              the ball. Emissions are mac chords (mac-anchored decision).
- *   WS  (7)  — old DE rebuilt: hjkl home row = space-left/exposé/
- *              mission-control/space-right (Ctrl+arrows), window quad on
- *              the row above. Left half carried over unchanged.
+ *              copy/paste/tab/find etc. as mnemonic Ctrl-chords — native
+ *              on KDE, arrive as Cmd-chords on mac via the swap.
+ *   WS  (7)  — old DE rebuilt: hjkl = Super+arrows (KDE: bind Meta+arrows
+ *              to desktops/overview; mac receives Ctrl+arrows = native
+ *              spaces/Mission Control). Window quad swap-invariant.
+ *   MAC (10) — transparent OS flag, toggled via FUN+M (shown on display;
+ *              NOT persisted across power cycles). Conditional layers
+ *              MACNAV (11) / MACMUX (12) re-emit the mac-poisoned chords:
+ *              real-Ctrl helix keys, tab cyclers, swappers, zellij grid.
  *   MOUSE    — automouse layer becomes a ball control panel: left hand
  *              gets SCROLL/SNIPE holds, right hand gets MB4/MB5.
  *
@@ -37,6 +48,9 @@
 #define WS      7
 #define MUX     8
 #define CMD     9
+#define MAC     10
+#define MACNAV  11
+#define MACMUX  12
 
 #include <behaviors/mouse_keys.dtsi>
 #include <dt-bindings/zmk/mouse.h>
@@ -110,6 +124,18 @@
             ignored-key-positions = <18 19 20 21>;
         };
 
+        /* MAC-mode window cycler: Ctrl+` emission arrives as Cmd+` via
+         * the device swap. (App/tab switchers need no new behaviors —
+         * on MACNAV, swap_ctl serves as the app switcher (Ctrl+Tab ->
+         * Cmd+Tab) and swap_gui as the in-app tab cycler (Gui+Tab ->
+         * Ctrl+Tab): the existing tri-states, cross-assigned.) */
+        swap_mac_grv: swap_mac_grv {
+            compatible = "zmk,behavior-tri-state";
+            #binding-cells = <0>;
+            bindings = <&kt LCTRL>, <&kp GRAVE>, <&kt LCTRL>;
+            ignored-key-positions = <18 19 20 21>;
+        };
+
         hm_l: homerow_mods_left {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -160,6 +186,18 @@
             flavor = "hold-preferred";
             tapping-term-ms = <200>;
             quick-tap-ms = <200>;
+        };
+    };
+
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+        macnav {
+            if-layers = <MAC NAV>;
+            then-layer = <MACNAV>;
+        };
+        macmux {
+            if-layers = <MAC MUX>;
+            then-layer = <MACMUX>;
         };
     };
 
@@ -216,13 +254,15 @@
             label = "FUN";
             //  `     F1   F2   F3   F4   F5   |   F6   F7   F8   F9   F10  F11
             //  __   bt0  bt1  bt2  bt3  btclr |   __   __   __   __  studio boot
-            //  __    __   __   __   __   __   |   __   __   __   __   __   __
-            //  __    __   gC   __   gV        |   __   __             __
+            //  __    __   __   __   __   __   |   __  MAC!  __   __   __   __
+            //  __    __   ^C   __   ^V        |   __   __             __
+            // MAC! = &tog MAC (M for mac) — OS mode flag; display shows
+            // "MAC" while on. Not persisted: retoggle after power cycle.
             bindings = <
-&kp GRAVE  &kp F1        &kp F2        &kp F3        &kp F4        &kp F5                &kp F6  &kp F7  &kp F8  &kp F9  &kp F10         &kp F11
-&none      &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_CLR            &none   &none   &none   &none   &studio_unlock  &bootloader
-&none      &none         &none         &none         &none         &none                 &none   &none   &none   &none   &none           &none
-&none      &none         &kp LG(C)     &none         &kp LG(V)                 &none     &trans                                          &none
+&kp GRAVE  &kp F1        &kp F2        &kp F3        &kp F4        &kp F5                &kp F6  &kp F7    &kp F8  &kp F9  &kp F10         &kp F11
+&none      &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_CLR            &none   &none     &none   &none   &studio_unlock  &bootloader
+&none      &none         &none         &none         &none         &none                 &none   &tog MAC  &none   &none   &none           &none
+&none      &none         &kp LC(C)     &none         &kp LC(V)                 &none     &trans                                          &none
             >;
         };
 
@@ -264,17 +304,20 @@
         ws_layer {
             label = "WS";
             // spatial layer: "NAV moves the cursor, WS moves containers".
-            // hjkl home row = macOS natives on the same positions as the
-            // NAV arrows: space-left / App Exposé / Mission Control /
-            // space-right (Ctrl+arrows — relative, survives macOS's
-            // dynamic space numbering).
-            // Row above = old DE window quad (Cmd+Ctrl+arrows), order kept.
-            // Parked at N / fslh / bslh: old DE Cmd+arrow trio (purpose
-            // unclear — identify or delete). Left half = old DE, untouched.
+            // hjkl home row = Super+arrows on the same positions as the
+            // NAV arrows. KDE: bind Meta+Left/Right to desktops,
+            // Meta+Up/Down to overview/grid. mac: the swap turns them
+            // into Ctrl+arrows = native spaces / Mission Control /
+            // App Exposé — relative, survives dynamic space numbering.
+            // Row above = old DE window quad (Cmd+Ctrl+arrows) —
+            // swap-invariant, identical on both OSes.
+            // Old DE parked Cmd+arrow trio deleted: under the swap its
+            // emissions became identical to the hjkl natives.
+            // Left half = old DE, untouched.
             bindings = <
 &none   &kp LA(F4)        &kp LC(F8)         &kp LG(E)          &none           &none                     &none         &kp LG(LC(LEFT))      &kp LG(LC(DOWN))  &kp LG(LC(UP))         &kp LG(LC(RIGHT))  &none
-&none   &kp LC(F7)        &kp LC(F9)         &kp LG(D)          &kp LC(F10)     &none                     &kp LC(LEFT)  &kp LC(DOWN)          &kp LC(UP)        &kp LC(RIGHT)          &none              &none
-&none   &kp LC(LA(LEFT))  &kp LC(LA(RIGHT))  &kp LC(LA(DOWN))   &kp LC(LA(UP))  &none                     &kp LG(LEFT)  &kp LC(LA(LS(LEFT))) &kp LG(DOWN)      &kp LC(LA(LS(RIGHT)))  &kp LG(UP)         &kp LG(RIGHT)
+&none   &kp LC(F7)        &kp LC(F9)         &kp LG(D)          &kp LC(F10)     &none                     &kp LG(LEFT)  &kp LG(DOWN)          &kp LG(UP)        &kp LG(RIGHT)          &none              &none
+&none   &kp LC(LA(LEFT))  &kp LC(LA(RIGHT))  &kp LC(LA(DOWN))   &kp LC(LA(UP))  &none                     &none         &kp LC(LA(LS(LEFT))) &none             &kp LC(LA(LS(RIGHT)))  &none              &none
 &trans  &trans            &trans             &trans             &trans                              &trans  &trans                                                                                      &trans
             >;
         };
@@ -296,18 +339,63 @@
 
         cmd_layer {
             label = "CMD";
-            // semantic OS commands, mac-anchored. One intent per key,
-            // mnemonic, left-hand-first so the whole edit workflow is
-            // one-handed while the right hand is on the ball.
-            //  __  quit clos __  reld ntab | redo reop insp open spot __
+            // semantic OS commands as Ctrl-chords: native on Linux,
+            // arrive as Cmd-chords on mac via the device swap. One
+            // intent per key, mnemonic, left-hand-first so the whole
+            // edit workflow is one-handed while the ball hand mouses.
+            // Inspect = F12 (universal). Tab prev/next = Ctrl+PgUp/PgDn
+            // (Linux-native; mac: bind Show Prev/Next Tab in App
+            // Shortcuts to Cmd+PgUp/PgDn once).
+            //  __  quit clos __  reld ntab | redo reop insp open laun __
             //  __  sall save bkmk find fnxt| tab← zo-  zo+  tab→  __  __
             //  __  undo cut  copy pste __  | nwin mini  __   __   __  __
             //  __   __   __   __   __      |  __   __             __
             bindings = <
-&none   &kp LG(Q)  &kp LG(W)  &none      &kp LG(R)  &kp LG(T)              &kp LG(LS(Z))     &kp LG(LS(T))  &kp LG(LA(I))  &kp LG(O)         &kp LG(SPACE)  &none
-&none   &kp LG(A)  &kp LG(S)  &kp LG(D)  &kp LG(F)  &kp LG(G)              &kp LG(LS(LBKT))  &kp LG(MINUS)  &kp LG(EQUAL)  &kp LG(LS(RBKT))  &none          &none
-&none   &kp LG(Z)  &kp LG(X)  &kp LG(C)  &kp LG(V)  &none                  &kp LG(N)         &kp LG(M)      &none          &none             &none          &none
+&none   &kp LC(Q)  &kp LC(W)  &none      &kp LC(R)  &kp LC(T)              &kp LC(LS(Z))     &kp LC(LS(T))  &kp F12        &kp LC(O)         &kp LC(SPACE)  &none
+&none   &kp LC(A)  &kp LC(S)  &kp LC(D)  &kp LC(F)  &kp LC(G)              &kp LC(PG_UP)     &kp LC(MINUS)  &kp LC(EQUAL)  &kp LC(PG_DN)     &none          &none
+&none   &kp LC(Z)  &kp LC(X)  &kp LC(C)  &kp LC(V)  &none                  &kp LC(N)         &kp LC(M)      &none          &none             &none          &none
 &trans  &trans     &trans     &trans     &trans                   &trans   &trans                                                                            &trans
+            >;
+        };
+
+        mac_layer {
+            label = "MAC";
+            // transparent OS flag — exists only to drive the MACNAV and
+            // MACMUX conditional layers. Toggled from FUN+M.
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans              &trans  &trans                                  &trans
+            >;
+        };
+
+        macnav_layer {
+            label = "MACNAV";
+            // active when MAC && NAV: re-emits the mac-poisoned NAV keys.
+            // Real-Ctrl helix keys emit Gui (arrives as Ctrl via swap);
+            // tab cyclers likewise; swappers cross-assigned: swap_mac_grv
+            // = Cmd+` window cycle, swap_ctl = Cmd+Tab app switcher,
+            // swap_gui = Ctrl+Tab in-app tabs. Everything else falls
+            // through to NAV.
+            bindings = <
+&trans       &trans           &trans         &trans          &trans          &trans                &trans  &kp LG(U)  &trans  &trans  &trans  &trans
+&trans       &trans           &trans         &kp LG(D)       &trans          &trans                &trans  &trans     &trans  &trans  &trans  &trans
+&trans       &trans           &trans         &kp LG(LS(C))   &kp LG(LS(V))   &trans                &trans  &trans     &trans  &trans  &trans  &trans
+&kp LG(TAB)  &kp LG(LS(TAB))  &swap_mac_grv  &swap_ctl       &swap_gui                   &trans    &trans                                     &trans
+            >;
+        };
+
+        macmux_layer {
+            label = "MACMUX";
+            // active when MAC && MUX: the zellij grid re-emitted as
+            // Gui+Alt so the swap delivers Ctrl+Alt — zellij config
+            // stays identical on both OSes.
+            bindings = <
+&none              &kp LG(LA(N1))  &kp LG(LA(N2))  &kp LG(LA(N3))  &kp LG(LA(N4))  &kp LG(LA(N5))               &kp LG(LA(N6))  &kp LG(LA(N7))  &kp LG(LA(N8))  &kp LG(LA(O))  &kp LG(LA(P))     &kp LG(LA(LBKT))
+&trans             &none           &kp LG(LA(S))   &kp LG(LA(D))   &kp LG(LA(F))   &kp LG(LA(G))                &kp LG(LA(H))   &kp LG(LA(J))   &kp LG(LA(K))   &kp LG(LA(L))  &none             &trans
+&kp LG(LA(MINUS))  &kp LG(LA(Z))   &kp LG(LA(X))   &none           &none           &kp LG(LA(B))                &kp LG(LA(N))   &kp LG(LA(M))   &none           &none          &kp LG(LA(FSLH))  &kp LG(LA(RBKT))
+&kp LG(LA(W))      &kp LG(LA(R))   &kp LG(LA(T))   &trans          &trans                        &trans         &trans                                                                           &none
             >;
         };
     };
