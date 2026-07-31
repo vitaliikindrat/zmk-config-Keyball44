@@ -19,10 +19,12 @@
  *   WS  (7)  — old DE rebuilt: hjkl = Super+arrows (KDE: bind Meta+arrows
  *              to desktops/overview; mac receives Ctrl+arrows = native
  *              spaces/Mission Control). Window quad swap-invariant.
- *   MAC (10) — transparent OS flag, toggled via FUN+M (shown on display;
- *              NOT persisted across power cycles). Conditional layers
- *              MACNAV (11) / MACMUX (12) re-emit the mac-poisoned chords:
- *              real-Ctrl helix keys, tab cyclers, swappers, zellij grid.
+ *   MAC (3)  — transparent OS flag, toggled via FUN+M (display shows MAC
+ *              while idle; NOT persisted across power cycles). Must stay
+ *              below MOUSE/SCROLL/SNIPE for the driver's highest-layer
+ *              mode detection. Conditional layers MACNAV (11) /
+ *              MACMUX (12) re-emit the mac-poisoned chords: real-Ctrl
+ *              helix keys, tab cyclers, swappers, zellij grid.
  *   MOUSE    — automouse layer becomes a ball control panel: left hand
  *              gets SCROLL/SNIPE holds, right hand gets MB4/MB5.
  *
@@ -41,16 +43,19 @@
 #define BASE    0
 #define NAV     1
 #define SYM     2
-#define FUN     3
+#define MAC     3
 #define MOUSE   4
 #define SCROLL  5
 #define SNIPE   6
 #define WS      7
 #define MUX     8
 #define CMD     9
-#define MAC     10
+#define FUN     10
 #define MACNAV  11
 #define MACMUX  12
+/* MAC must sit BELOW the trackball layers: the pmw3610 driver detects
+ * scroll/snipe (and shows the layer name) via the HIGHEST active layer,
+ * so an always-on flag above 4/5/6 would break CPI switching. */
 
 #include <behaviors/mouse_keys.dtsi>
 #include <dt-bindings/zmk/mouse.h>
@@ -253,19 +258,17 @@
             >;
         };
 
-        function_layer {
-            label = "FUN";
-            //  `     F1   F2   F3   F4   F5   |   F6   F7   F8   F9   F10  F11
-            //  __   bt0  bt1  bt2  bt3  btclr |   __   __   __   __  studio boot
-            //  __    __   __   __   __   __   |   __  MAC!  __   __   __   __
-            //  __    __   ^C   __   ^V        |   __   __             __
-            // MAC! = &tog MAC (M for mac) — OS mode flag; display shows
-            // "MAC" while on. Not persisted: retoggle after power cycle.
+        mac_layer {
+            label = "MAC";
+            // transparent OS flag (layer 3) — drives the MACNAV/MACMUX
+            // conditional layers and the pointer scaler. Toggled FUN+M.
+            // Deliberately BELOW MOUSE/SCROLL/SNIPE so the driver's
+            // highest-layer checks still see them (snipe/scroll CPI).
             bindings = <
-&kp GRAVE  &kp F1        &kp F2        &kp F3        &kp F4        &kp F5                &kp F6  &kp F7    &kp F8  &kp F9  &kp F10         &kp F11
-&none      &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_CLR            &none   &none     &none   &none   &studio_unlock  &bootloader
-&none      &none         &none         &none         &none         &none                 &none   &tog MAC  &none   &none   &none           &none
-&none      &none         &kp LC(C)     &none         &kp LC(V)                 &none     &trans                                          &none
+&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans              &trans  &trans                                  &trans
             >;
         };
 
@@ -361,15 +364,19 @@
             >;
         };
 
-        mac_layer {
-            label = "MAC";
-            // transparent OS flag — exists only to drive the MACNAV and
-            // MACMUX conditional layers. Toggled from FUN+M.
+        function_layer {
+            label = "FUN";
+            //  `     F1   F2   F3   F4   F5   |   F6   F7   F8   F9   F10  F11
+            //  __   bt0  bt1  bt2  bt3  btclr |   __   __   __   __  studio boot
+            //  __    __   __   __   __   __   |   __  MAC!  __   __   __   __
+            //  __    __   ^C   __   ^V        |   __   __             __
+            // MAC! = &tog MAC (M for mac) — OS mode flag; display shows
+            // "MAC" while idle. Not persisted: retoggle after power cycle.
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans              &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans              &trans  &trans                                  &trans
+&kp GRAVE  &kp F1        &kp F2        &kp F3        &kp F4        &kp F5                &kp F6  &kp F7    &kp F8  &kp F9  &kp F10         &kp F11
+&none      &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_CLR            &none   &none     &none   &none   &studio_unlock  &bootloader
+&none      &none         &none         &none         &none         &none                 &none   &tog MAC  &none   &none   &none           &none
+&none      &none         &kp LC(C)     &none         &kp LC(V)                 &none     &trans                                          &none
             >;
         };
 
