@@ -241,7 +241,10 @@
             //  __    !    @    #    $    %    |   _    {    }    (    )    '
             //  -     ^    &    *    =    "    |   |    [    ]    -    +    bsl
             //  cF7  cF9  copy  __  paste      |   __   ;              del
-            //  (cF7/cF9 = Cornix palm keys: Mission Control / App Expose on macOS)
+            //  (cF7 = show windows of same app / App Exposé, cF9 =
+            //   Mission Control — stable chords bound on BOTH OSes.
+            //   After the mac Ctrl<->Cmd swap they arrive as Cmd+F7/F9:
+            //   re-record the two mac Mission Control shortcuts once.)
             bindings = <
 &kp TILDE  &kp N1     &kp N2    &kp N3     &kp N4       &kp N5               &kp N6     &kp N7    &kp N8    &kp N9     &kp N0    &kp RBKT
 &trans     &kp EXCL   &kp AT    &kp HASH   &kp DLLR     &kp PRCNT            &kp UNDER  &kp LBRC  &kp RBRC  &kp LPAR   &kp RPAR  &kp SQT
