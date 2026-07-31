@@ -1,14 +1,23 @@
 /*
- * Keyball44 — synced with the Cornix layout (zmk-keyboard-cornix = source of truth).
+ * Keyball44 — semantic-redesign branch (mac-anchored).
  *
- * Same layers/behaviors as Cornix where the 44-key layout allows:
- * homerow mods, td_sym_mux (hold = SYM, tap-then-hold = MUX), zellij MUX
- * layer, helix NAV layer with tri-state swappers.
+ * Shared with Cornix: homerow mods, sym_mux thumb (hold = SYM, tap =
+ * sticky MUX, tap-then-hold = held MUX), zellij MUX layer, helix NAV
+ * layer with tri-state swappers.
  *
- * Keyball-specific (kept as-is): MOUSE/SCROLL/SNIPE trackball layers
- * (indices 4/5/6 are hardcoded in keyball44_right.overlay), lt SCROLL on
- * backslash, mkp LCLK on the bottom-left key, DE window-management layer
- * (reached from NAV right thumb).
+ * Redesign vs main:
+ *   CMD (9)  — semantic command layer on the left thumb (old LCTRL slot):
+ *              copy/paste/tab/find etc. as mnemonic keys, one-handed with
+ *              the ball. Emissions are mac chords (mac-anchored decision).
+ *   WS  (7)  — old DE rebuilt: hjkl home row = space-left/exposé/
+ *              mission-control/space-right (Ctrl+arrows), window quad on
+ *              the row above. Left half carried over unchanged.
+ *   MOUSE    — automouse layer becomes a ball control panel: left hand
+ *              gets SCROLL/SNIPE holds, right hand gets MB4/MB5.
+ *
+ * Keyball-specific: MOUSE/SCROLL/SNIPE trackball layers (indices 4/5/6
+ * are hardcoded in keyball44_right.overlay), lt SCROLL on backslash,
+ * mkp LCLK on the bottom-left key.
  *
  * Physical map (matrix positions):
  *   0  1  2  3  4  5   |   6  7  8  9 10 11
@@ -18,15 +27,16 @@
  *  (38-40 / 41-42 = thumbs, 36-37 = left extras, 43 = right palm)
  */
 
-#define LINUX   0
+#define BASE    0
 #define NAV     1
 #define SYM     2
 #define FUN     3
 #define MOUSE   4
 #define SCROLL  5
 #define SNIPE   6
-#define DE      7
+#define WS      7
 #define MUX     8
+#define CMD     9
 
 #include <behaviors/mouse_keys.dtsi>
 #include <dt-bindings/zmk/mouse.h>
@@ -49,6 +59,10 @@
 };
 
 &caps_word { continue-list = <UNDERSCORE MINUS>; };
+
+// sticky MUX arm window: a tap of sym_mux waits this long for the zellij
+// key before dropping. Short on purpose — limits stray-tap damage.
+&sl { release-after-ms = <1000>; };
 
 // helix "zz" — center view on cursor
 / {
@@ -136,29 +150,35 @@
             require-prior-idle-ms = <HM_PRIOR_IDLE>;
         };
 
-        // vial TD(1): hold = SYM, tap-then-hold = MUX
-        td_sym_mux: td_sym_mux {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
+        // hold = SYM, tap = sticky MUX (next key goes to zellij),
+        // tap-then-hold = held MUX via quick-tap (the old vial gesture
+        // still works). Sticky arm expires via &sl release-after-ms.
+        sym_mux: sym_mux {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            bindings = <&mo>, <&sl>;
+            flavor = "hold-preferred";
             tapping-term-ms = <200>;
-            bindings = <&mo SYM>, <&mo MUX>;
+            quick-tap-ms = <200>;
         };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
-        linux_layer {
-            label = "LINUX";
+        base_layer {
+            label = "BASE";
             //  tab   q    w    e    r    t    |   y    u    i    o    p    [
             //  esc/N a/G  s/A  d/C  f/S  g    |   h    j/S  k/C  l/A  ;/G  bspc
             //  -     z    x    c    v    b    |   n    m    ,    .    /    bsl/SCRL
-            //  mb1  shft ctrl SYM* spc        |  ret  :              capsw
+            //  mb1  shft CMD  SYM* spc        |  ret  :              capsw
+            // (thumb LCTRL replaced by CMD hold — raw Ctrl chords go
+            //  cross-hand via HRM K; frequent commands live on CMD)
             bindings = <
 &kp TAB      &kp Q         &kp W         &kp E          &kp R                &kp T                 &kp Y    &kp U                &kp I          &kp O         &kp P            &kp LBKT
 &lt NAV ESC  &hm_l LGUI A  &hm_l LALT S  &hm_l LCTRL D  &hm_shift_l LSHFT F  &kp G                 &kp H    &hm_shift_r RSHFT J  &hm_r RCTRL K  &hm_r LALT L  &hm_r RGUI SEMI  &kp BSPC
 &kp MINUS    &kp Z         &kp X         &kp C          &kp V                &kp B                 &kp N    &kp M                &kp COMMA      &kp DOT       &kp FSLH         &lt SCROLL BSLH
-&mkp LCLK    &kp LSHFT     &kp LCTRL     &td_sym_mux    &kp SPACE                       &kp RET    &kp COLON                                                                   &caps_word
+&mkp LCLK    &kp LSHFT     &mo CMD       &sym_mux SYM MUX  &kp SPACE                    &kp RET    &kp COLON                                                                   &caps_word
             >;
         };
 
@@ -173,7 +193,7 @@
 &kp GRAVE    &kp LG(N1)       &kp LG(N2)     &kp LG(N3)     &kp LG(N4)     &kp F6                &kp LS(Y)  &kp LC(U)  &kp LA(I)  &kp LA(O)  &kp LA(P)     &kp LA(N)
 &trans       &kp LS(A)        &kp LA(S)      &kp LC(D)      &trans         &kp LS(G)             &kp LEFT   &kp DOWN   &kp UP     &kp RIGHT  &kp LA(SEMI)  &kp DEL
 &none        &zz              &kp LS(X)      &kp LC(LS(C))  &kp LC(LS(V))  &none                 &kp HOME   &kp PG_DN  &kp PG_UP  &kp END    &none         &none
-&kp LC(TAB)  &kp LC(LS(TAB))  &swap_gui_grv  &swap_gui      &swap_ctl                 &mo DE     &mo FUN                                                   &trans
+&kp LC(TAB)  &kp LC(LS(TAB))  &swap_gui_grv  &swap_gui      &swap_ctl                 &mo WS     &mo FUN                                                   &trans
             >;
         };
 
@@ -208,11 +228,16 @@
 
         mouse_layer {
             label = "MOUSE";
+            // ball control panel: automouse arms the left hand —
+            // F = scroll hold, D = snipe hold (opposite hand from the
+            // ball, no pinky curl). Thumb shift/CMD stay transparent for
+            // shift-click and copy/paste while mousing. MB4/MB5 =
+            // browser back/forward on U/O.
             bindings = <
-&none         &none  &none  &none  &none  &none              &none          &none      &none   &none      &none      &none
-&lt 6 ESCAPE  &none  &none  &none  &none  &none              &kp PAGE_UP    &mkp LCLK  &none   &mkp RCLK  &mkp MCLK  &kp BACKSPACE
-&mo 6         &none  &none  &none  &none  &none              &kp PAGE_DOWN  &none      &none   &none      &none      &mo 5
-&trans        &trans &trans &trans &trans            &trans  &trans                                                  &mo 6
+&none            &none  &none  &none        &none        &none              &none          &mkp MB4   &none   &mkp MB5   &none      &none
+&lt SNIPE ESCAPE &none  &none  &mo SNIPE    &mo SCROLL   &none              &kp PAGE_UP    &mkp LCLK  &none   &mkp RCLK  &mkp MCLK  &kp BACKSPACE
+&mo SNIPE        &none  &none  &none        &none        &none              &kp PAGE_DOWN  &none      &none   &none      &none      &mo SCROLL
+&trans           &trans &trans &trans       &trans                &trans    &trans                                                  &mo SNIPE
             >;
         };
 
@@ -236,12 +261,20 @@
             >;
         };
 
-        de_layer {
-            label = "DE";
+        ws_layer {
+            label = "WS";
+            // spatial layer: "NAV moves the cursor, WS moves containers".
+            // hjkl home row = macOS natives on the same positions as the
+            // NAV arrows: space-left / App Exposé / Mission Control /
+            // space-right (Ctrl+arrows — relative, survives macOS's
+            // dynamic space numbering).
+            // Row above = old DE window quad (Cmd+Ctrl+arrows), order kept.
+            // Parked at N / fslh / bslh: old DE Cmd+arrow trio (purpose
+            // unclear — identify or delete). Left half = old DE, untouched.
             bindings = <
-&none   &kp LA(F4)        &kp LC(F8)         &kp LG(E)          &none           &none                     &none   &kp LG(LEFT)          &kp LG(UP)         &kp LG(RIGHT)          &none               &none
-&none   &kp LC(F7)        &kp LC(F9)         &kp LG(D)          &kp LC(F10)     &none                     &none   &kp LG(LC(LEFT))      &kp LG(LC(DOWN))   &kp LG(LC(UP))         &kp LG(LC(RIGHT))   &none
-&none   &kp LC(LA(LEFT))  &kp LC(LA(RIGHT))  &kp LC(LA(DOWN))   &kp LC(LA(UP))  &none                     &none   &kp LC(LA(LS(LEFT)))  &kp LG(DOWN)       &kp LC(LA(LS(RIGHT)))  &none               &none
+&none   &kp LA(F4)        &kp LC(F8)         &kp LG(E)          &none           &none                     &none         &kp LG(LC(LEFT))      &kp LG(LC(DOWN))  &kp LG(LC(UP))         &kp LG(LC(RIGHT))  &none
+&none   &kp LC(F7)        &kp LC(F9)         &kp LG(D)          &kp LC(F10)     &none                     &kp LC(LEFT)  &kp LC(DOWN)          &kp LC(UP)        &kp LC(RIGHT)          &none              &none
+&none   &kp LC(LA(LEFT))  &kp LC(LA(RIGHT))  &kp LC(LA(DOWN))   &kp LC(LA(UP))  &none                     &kp LG(LEFT)  &kp LC(LA(LS(LEFT))) &kp LG(DOWN)      &kp LC(LA(LS(RIGHT)))  &kp LG(UP)         &kp LG(RIGHT)
 &trans  &trans            &trans             &trans             &trans                              &trans  &trans                                                                                      &trans
             >;
         };
@@ -258,6 +291,23 @@
 &trans             &none           &kp LC(LA(S))   &kp LC(LA(D))   &kp LC(LA(F))   &kp LC(LA(G))                &kp LC(LA(H))   &kp LC(LA(J))   &kp LC(LA(K))   &kp LC(LA(L))  &none             &trans
 &kp LC(LA(MINUS))  &kp LC(LA(Z))   &kp LC(LA(X))   &none           &none           &kp LC(LA(B))                &kp LC(LA(N))   &kp LC(LA(M))   &none           &none          &kp LC(LA(FSLH))  &kp LC(LA(RBKT))
 &kp LC(LA(W))      &kp LC(LA(R))   &kp LC(LA(T))   &trans          &trans                        &trans         &trans                                                                           &none
+            >;
+        };
+
+        cmd_layer {
+            label = "CMD";
+            // semantic OS commands, mac-anchored. One intent per key,
+            // mnemonic, left-hand-first so the whole edit workflow is
+            // one-handed while the right hand is on the ball.
+            //  __  quit clos __  reld ntab | redo reop insp open spot __
+            //  __  sall save bkmk find fnxt| tab← zo-  zo+  tab→  __  __
+            //  __  undo cut  copy pste __  | nwin mini  __   __   __  __
+            //  __   __   __   __   __      |  __   __             __
+            bindings = <
+&none   &kp LG(Q)  &kp LG(W)  &none      &kp LG(R)  &kp LG(T)              &kp LG(LS(Z))     &kp LG(LS(T))  &kp LG(LA(I))  &kp LG(O)         &kp LG(SPACE)  &none
+&none   &kp LG(A)  &kp LG(S)  &kp LG(D)  &kp LG(F)  &kp LG(G)              &kp LG(LS(LBKT))  &kp LG(MINUS)  &kp LG(EQUAL)  &kp LG(LS(RBKT))  &none          &none
+&none   &kp LG(Z)  &kp LG(X)  &kp LG(C)  &kp LG(V)  &none                  &kp LG(N)         &kp LG(M)      &none          &none             &none          &none
+&trans  &trans     &trans     &trans     &trans                   &trans   &trans                                                                            &trans
             >;
         };
     };
