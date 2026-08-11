@@ -77,6 +77,11 @@
     kscan0: kscan {
         compatible = "zmk,kscan-gpio-matrix";
         label = "KSCAN";
+        /* required for CONFIG_ZMK_SLEEP: arms the matrix GPIOs as deep-
+         * sleep wake triggers — without this only USB/power events wake
+         * the half, which is exactly the "dead until power-cycle on
+         * battery" failure. */
+        wakeup-source;
 
         diode-direction = "col2row";
 		row-gpios
