@@ -5,6 +5,7 @@
  */
  
 #include "keyball44.dtsi"
+#include <input/processors.dtsi>
 
 &default_transform {
     col-offset = <6>;
@@ -65,5 +66,13 @@
     compatible = "zmk,input-listener";
     device = <&trackball>;
 
+    /* mac mode (layer 3 = MAC flag, toggled FUN+M): macOS's accel
+     * curve starves the ~300 effective CPI, so scale x/y 2:1 there.
+     * Scroll/wheel events are unaffected (scaler touches REL_X/Y only);
+     * Linux feel untouched. Tune the 2/1 ratio to taste. */
+    mac_scaler {
+      layers = <3>;
+      input-processors = <&zip_xy_scaler 2 1>;
+    };
   };
 };

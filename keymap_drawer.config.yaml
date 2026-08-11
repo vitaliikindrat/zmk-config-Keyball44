@@ -1,4 +1,5 @@
 draw_config:
+  dark_mode: true
   n_columns: 1
   draw_key_sides: true
   key_w: 60.0
@@ -24,11 +25,13 @@ draw_config:
       font-size: 12px;
       font-weight: bold;
       text-rendering: optimizeLegibility;
+      /* opaque dark canvas: readable on any viewer background */
+      background-color: #1b1e23;
     }
 
-    /* Color accent for held keys */
+    /* Color accent for held keys (dark gold — light text stays legible) */
     rect.held, rect.combo.held {
-        fill: #ffc;
+        fill: #5f531d;
     }
 
     /* Technique borrowed and extended from https://github.com/englmaxi/zmk-config/blob/master/keymap-drawer/config.yaml */

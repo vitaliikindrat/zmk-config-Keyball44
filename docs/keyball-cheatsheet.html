@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keyball44 — semantic-redesign cheatsheet</title>
+<style>
+  :root {
+    --bg: #f7f6f3; --fg: #1a1a1a; --muted: #777; --key: #ffffff; --key-border: #d8d5cf;
+    --hold: #0e7c66; --new: #b45309; --dead: #c9c6c0; --accent: #24548f; --panel: #efede8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16181d; --fg: #e7e5e0; --muted: #9a97a0; --key: #22252c; --key-border: #383c45;
+      --hold: #4fd6b8; --new: #f5a35c; --dead: #3a3d44; --accent: #7fb2ee; --panel: #1d2026;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0 auto; max-width: 1080px; padding: 24px 20px 60px; background: var(--bg); color: var(--fg);
+         font: 14px/1.45 system-ui, sans-serif; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 34px 0 4px; }
+  h2 .tag { font-weight: normal; color: var(--muted); font-size: 13px; margin-left: 8px; }
+  p.sub { color: var(--muted); margin: 2px 0 10px; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; background: var(--panel); border-radius: 10px;
+            padding: 10px 14px; margin: 14px 0 6px; font-size: 13px; }
+  .legend b.h { color: var(--hold); } .legend b.n { color: var(--new); }
+  .board { display: grid; grid-template-columns: repeat(6, 1fr) 26px repeat(6, 1fr); gap: 5px; margin: 10px 0 4px; }
+  .key { min-height: 46px; background: var(--key); border: 1px solid var(--key-border); border-radius: 7px;
+         padding: 4px 5px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+         text-align: center; overflow: hidden; }
+  .key .t { font: 600 13px/1.15 ui-monospace, "SF Mono", Menlo, monospace; word-break: break-word; }
+  .key .h { font: 500 10px/1.2 ui-monospace, monospace; color: var(--hold); margin-top: 2px; }
+  .key.dead { background: transparent; border-style: dashed; }
+  .key.dead .t { color: var(--dead); }
+  .key.trans .t { color: var(--muted); font-weight: 400; font-style: italic; }
+  .key.new { border-color: var(--new); box-shadow: inset 0 0 0 1px var(--new); }
+  .gap { grid-column: 7; }
+  .scenarios { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; margin-top: 10px; }
+  .sc { background: var(--panel); border-radius: 8px; padding: 8px 11px; }
+  .sc .q { font-weight: 600; }
+  .sc .a { font: 500 12.5px/1.5 ui-monospace, monospace; color: var(--accent); }
+  kbd { background: var(--key); border: 1px solid var(--key-border); border-radius: 4px; padding: 0 5px;
+        font: 600 12px ui-monospace, monospace; }
+  .note { font-size: 12.5px; color: var(--muted); margin: 4px 0 0; }
+</style>
+</head>
+<body>
+<h1>Keyball44 · semantic-redesign</h1>
+<p class="sub">Linux-truth emissions + macOS per-device Ctrl↔Cmd swap · one intent per key, same finger on both OSes · Ctrl-chords = commands, Super-chords = windows/desktops</p>
+
+<div class="legend">
+  <span><b>big</b> = tap</span>
+  <span><b class="h">green</b> = hold / layer meaning</span>
+  <span><b class="n">orange border</b> = new on this branch — the learning delta</span>
+  <span style="color:var(--dead)">dashed = empty</span>
+  <span style="color:var(--muted)"><i>italic</i> = transparent (falls through)</span>
+</div>
+
+<h2>How do I…</h2>
+<div class="scenarios">
+  <div class="sc"><div class="q">copy / paste (even while mousing)</div><div class="a">CMD-thumb + C / V</div></div>
+  <div class="sc"><div class="q">new tab · close · reopen</div><div class="a">CMD + T · W · U</div></div>
+  <div class="sc"><div class="q">find / find next</div><div class="a">CMD + F / G</div></div>
+  <div class="sc"><div class="q">prev / next browser tab</div><div class="a">CMD + H / L</div></div>
+  <div class="sc"><div class="q">switch space ← →</div><div class="a">NAV(esc) + ret-thumb, then H / L</div></div>
+  <div class="sc"><div class="q">Mission Control / Exposé</div><div class="a">WS + K / J</div></div>
+  <div class="sc"><div class="q">zellij, one command</div><div class="a">tap SYM-thumb, then key (sticky)</div></div>
+  <div class="sc"><div class="q">zellij, several commands</div><div class="a">tap-then-hold SYM-thumb (old gesture)</div></div>
+  <div class="sc"><div class="q">switch app / window / tab</div><div class="a">NAV + ⌘tab / ⌘` / ^tab thumbs</div></div>
+  <div class="sc"><div class="q">scroll</div><div class="a">roll ball → hold F (or \ as before)</div></div>
+  <div class="sc"><div class="q">snipe (precision)</div><div class="a">roll ball → hold D</div></div>
+  <div class="sc"><div class="q">terminal SIGINT — Linux</div><div class="a">hold K + C (cross-hand HRM Ctrl)</div></div>
+  <div class="sc"><div class="q">terminal SIGINT — mac</div><div class="a">hold ; (or A) + C — Gui arrives as Ctrl</div></div>
+  <div class="sc"><div class="q">select text</div><div class="a">NAV + thumb-⇧ + arrows</div></div>
+  <div class="sc"><div class="q">shift-click / ctrl-click</div><div class="a">thumb-⇧ / HRM + ball click</div></div>
+  <div class="sc"><div class="q">switch OS mode</div><div class="a">FUN + M — display shows MAC (retoggle after power cycle)</div></div>
+</div>
+
+<div id="layers"></div>
+
+<script>
+// key: "tap|hold|flags"  flags: n=new, d=dead, t=trans
+const X = "|​|d", T = "…||t";
+const layers = [
+["BASE", "the home. HRMs on home row (cross-hand for ad-hoc chords). Thumbs: ⇧ · CMD · SYM/MUX · space", [
+ "tab","q","w","e","r","t",   "y","u","i","o","p","[",
+ "esc|NAV","a|⌘","s|⌥","d|⌃","f|⇧","g",   "h","j|⇧","k|⌃","l|⌥",";|⌘","bspc",
+ "-","z","x","c","v","b",   "n","m",",",".","/","\\|SCROLL",
+ "LMB","⇧","|CMD hold|n","|hold SYM · tap ⇢MUX|n","space",   "ret",":","caps word"
+]],
+["CMD", "hold left thumb (old ctrl slot) — Ctrl-chords: native on KDE, arrive as ⌘ on mac via the swap", [
+ X,"quit ^Q|​|n","close ^W|​|n",X,"reload ^R|​|n","new tab ^T|​|n",
+   "redo ⇧^Z|​|n","reopen ⇧^T|​|n","inspect F12|​|n","open ^O|​|n","launch ^␣|​|n",X,
+ X,"sel all ^A|​|n","save ^S|​|n","bkmark ^D|​|n","find ^F|​|n","find→ ^G|​|n",
+   "tab← ^PgUp|​|n","zoom− ^-|​|n","zoom+ ^=|​|n","tab→ ^PgDn|​|n",X,X,
+ X,"undo ^Z|​|n","cut ^X|​|n","copy ^C|​|n","paste ^V|​|n",X,
+   "new win ^N|​|n","minim ^M|​|n",X,X,X,X,
+ T,T,T,T,T,  T,T,T
+]],
+["NAV", "hold esc — motion, helix support, swappers. Right thumbs open WS and FUN", [
+ "`","ws1 ⌘1","ws2 ⌘2","ws3 ⌘3","ws4 ⌘4","F6",   "⇧Y","⌃U","⌥I","⌥O","⌥P","⌥N",
+ T,"⇧A","⌥S","⌃D",T,"⇧G",   "←","↓","↑","→","⌥;","del",
+ X,"zz","⇧X","⌃⇧C","⌃⇧V",X,   "home","pgdn","pgup","end",X,X,
+ "^tab","^⇧tab","⌘` win","⌘tab app","^tab tabs",   "|WS hold|n","|FUN hold","caps word"
+]],
+["WS", "NAV + ret-thumb — windows &amp; desktops. hjkl = Super+arrows (KDE Meta-binds; mac swap → Ctrl+arrows natives). Win-quad = swap-invariant", [
+ X,"⌥F4","⌃F8","⊞E",X,X,   X,"win← ⌘⌃←|​|n","win↓ ⌘⌃↓|​|n","win↑ ⌘⌃↑|​|n","win→ ⌘⌃→|​|n",X,
+ X,"⌃F7 app-exp","⌃F9 msn","⊞D","⌃F10",X,   "desk← ⊞←|​|n","grid ⊞↓|​|n","ovrvw ⊞↑|​|n","desk→ ⊞→|​|n",X,X,
+ X,"⌃⌥←","⌃⌥→","⌃⌥↓","⌃⌥↑",X,   X,"⌃⌥⇧←",X,"⌃⌥⇧→",X,X,
+ T,T,T,T,T,  T,T,T
+]],
+["MOUSE", "auto — ball movement arms it (700 ms). Left hand = ball control panel", [
+ X,X,X,X,X,X,   X,"back MB4|​|n",X,"fwd MB5|​|n",X,X,
+ "esc|SNIPE",X,X,"|snipe hold|n","|scroll hold|n",X,   "pgup","LMB",X,"RMB","MMB","bspc",
+ "|SNIPE",X,X,X,X,X,   "pgdn",X,X,X,X,"|SCROLL",
+ T,T,T,T,T,  T,T,"|SNIPE"
+]],
+["SYM", "hold SYM-thumb — numbers &amp; symbols (unchanged)", [
+ "~","1","2","3","4","5",   "6","7","8","9","0","]",
+ T,"!","@","#","$","%",   "_","{","}","(",")","'",
+ "-","^","&amp;","*","=","\"",   "&#124;","[","]","-","+","\\",
+ "⌃F7 app-exp","⌃F9 msn","copy",T,"paste",   T,";","del"
+]],
+["MUX", "tap SYM-thumb (sticky, 1 s) or tap-then-hold — zellij ⌃⌥ mirror", [
+ X,"⌃⌥1","⌃⌥2","⌃⌥3","⌃⌥4","⌃⌥5",   "⌃⌥6","⌃⌥7","⌃⌥8","⌃⌥O","⌃⌥P","⌃⌥[",
+ T,X,"⌃⌥S","⌃⌥D","⌃⌥F","⌃⌥G",   "⌃⌥H","⌃⌥J","⌃⌥K","⌃⌥L",X,T,
+ "⌃⌥-","⌃⌥Z","⌃⌥X",X,X,"⌃⌥B",   "⌃⌥N","⌃⌥M",X,X,"⌃⌥/","⌃⌥]",
+ "⌃⌥W","⌃⌥R","⌃⌥T",T,T,  T,T,X
+]],
+["FUN", "NAV + colon-thumb — F-keys, bluetooth, flashing, OS mode", [
+ "`","F1","F2","F3","F4","F5",   "F6","F7","F8","F9","F10","F11",
+ X,"bt 0","bt 1","bt 2","bt 3","bt clr",   X,X,X,X,"studio","BOOT",
+ X,X,X,X,X,X,   X,"MAC|toggle OS mode|n",X,X,X,X,
+ X,X,"^C",X,"^V",  X,T,X
+]]
+];
+const root = document.getElementById("layers");
+for (const [name, desc, keys] of layers) {
+  const h = document.createElement("h2");
+  h.innerHTML = name + '<span class="tag">' + desc + "</span>";
+  root.appendChild(h);
+  const b = document.createElement("div"); b.className = "board";
+  keys.forEach((spec, i) => {
+    if (i % 12 === 6 && i < 36) b.appendChild(Object.assign(document.createElement("div"), {className: "gap"}));
+    if (i === 41) b.appendChild(Object.assign(document.createElement("div"), {className: "gap"}));
+    const [t, hold, flags = ""] = spec.split("|");
+    const k = document.createElement("div");
+    k.className = "key" + (flags.includes("n") ? " new" : "") + (flags.includes("d") ? " dead" : "") + (flags.includes("t") ? " trans" : "");
+    k.innerHTML = '<span class="t">' + (t || "·") + "</span>" + (hold && hold.trim() ? '<span class="h">' + hold + "</span>" : "");
+    if (i === 43) k.style.gridColumn = "13";
+    b.appendChild(k);
+  });
+  root.appendChild(b);
+  if (name === "MOUSE") {
+    const n = document.createElement("p"); n.className = "note";
+    n.textContent = "SCROLL: ball = wheel, J = LMB. SNIPE: 400 CPI precision, J = LMB. Both reachable from MOUSE left hand now.";
+    root.appendChild(n);
+  }
+}
+</script>
+
+<h2>MAC mode (FUN + M)<span class="tag">only re-emits what the swap would poison — everything else identical</span></h2>
+<div class="scenarios">
+  <div class="sc"><div class="q">NAV helix real-Ctrl keys</div><div class="a">^U ^D ^⇧C ^⇧V re-emit as Gui → arrive as real Ctrl</div></div>
+  <div class="sc"><div class="q">NAV tab cyclers</div><div class="a">^tab / ^⇧tab likewise</div></div>
+  <div class="sc"><div class="q">Swappers cross-assign</div><div class="a">app switch arrives ⌘tab · window cycle ⌘` · in-app tabs ⌃tab</div></div>
+  <div class="sc"><div class="q">zellij grid</div><div class="a">re-emits Gui+Alt → arrives Ctrl+Alt — zellij config identical on both OSes</div></div>
+  <div class="sc"><div class="q">pointer speed</div><div class="a">2× x/y scaler (mac accel starves ~300 CPI) — Linux feel &amp; scroll untouched</div></div>
+  <div class="sc"><div class="q">display while in mac mode</div><div class="a">idle = MAC · ball = MOUSE · holds = SCROLL / SNIPE (MAC sits below the ball layers on purpose)</div></div>
+</div>
+
+<h2>One-time OS setup</h2>
+<div class="scenarios">
+  <div class="sc"><div class="q">mac 1 — THE swap</div><div class="a">Settings → Keyboard → Modifier Keys → Keyball44: swap ⌃ ↔ ⌘</div></div>
+  <div class="sc"><div class="q">mac 2 — desktops</div><div class="a">enable "Switch to Desktop 1–4"; re-record App Exposé → ⌘F7, Mission Ctl → ⌘F9 (press the physical keys)</div></div>
+  <div class="sc"><div class="q">mac 3 — tabs</div><div class="a">App Shortcuts: Show Next/Previous Tab → ⌘PgDn / ⌘PgUp</div></div>
+  <div class="sc"><div class="q">KDE — desktops &amp; snaps</div><div class="a">Meta+←/→ desktops · Meta+↑ Overview · Meta+↓ Grid · Meta+1–4 · Meta+Ctrl+arrows snaps</div></div>
+  <div class="sc"><div class="q">KDE — launcher</div><div class="a">KRunner → Ctrl+Space</div></div>
+  <div class="sc"><div class="q">Linux terminal copy</div><div class="a">conditional bind: copy-if-selection else SIGINT (ghostty performable / kitty)</div></div>
+</div>
+
+<h2>Rules of the system</h2>
+<div class="scenarios">
+  <div class="sc"><div class="q">One intent, one finger position</div><div class="a">OS mess stays inside the layer table (and the mac swap)</div></div>
+  <div class="sc"><div class="q">Ctrl-chords = commands</div><div class="a">Super-chords = windows &amp; desktops — both OSes consume both</div></div>
+  <div class="sc"><div class="q">App disagrees with a chord?</div><div class="a">mac: App Shortcuts · KDE: global shortcuts — fix the app, never the finger</div></div>
+  <div class="sc"><div class="q">Anything not on CMD</div><div class="a">cross-hand HRMs — mod on the opposite hand from the letter</div></div>
+  <div class="sc"><div class="q">NAV moves the cursor</div><div class="a">WS moves windows &amp; desktops</div></div>
+</div>
+</body>
+</html>
