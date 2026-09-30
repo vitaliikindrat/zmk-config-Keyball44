@@ -59,6 +59,7 @@
 | scroll / snipe                | ball → **hold F / hold D**           |
 | browser back / forward        | **ball → U / O (MB4 / MB5)**         |
 | select text                   | NAV + thumb-⇧ + arrows               |
+| **Ukrainian apostrophe / backtick** | **SYM + bottom-right (plain grave)**; Windows maps `~` to ₴ |
 | raw terminal ^C on **Linux**  | cross-hand HRM: hold **K** + key     |
 | raw terminal ^C on **mac**    | hold **;** (or A) + key — Gui arrives as Ctrl |
 | any chord not listed          | cross-hand HRMs (mod opposite hand)  |
