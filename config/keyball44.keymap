@@ -335,12 +335,12 @@
         mux_layer {
             label = "MUX";
             // zellij: everything sends Ctrl+Alt+<key>; see zellij config.kdl
-            //  __   ca1  ca2  ca3  ca4  ca5   |  ca6  ca7  ca8  caO  caP  ca[
+            //  __   ca1  ca2  ca3  ca4  caT   |  ca6  ca7  ca8  caO  caP  ca[
             //  __    __  caS  caD  caF  caG   |  caH  caJ  caK  caL   __   __
             //  ca-  caZ  caX   __   __  caB   |  caN  caM   __   __  ca/  ca]
             //  caW  caR  caT   __   __        |   __   __             __
             bindings = <
-&none              &kp LC(LA(N1))  &kp LC(LA(N2))  &kp LC(LA(N3))  &kp LC(LA(N4))  &kp LC(LA(N5))               &kp LC(LA(N6))  &kp LC(LA(N7))  &kp LC(LA(N8))  &kp LC(LA(O))  &kp LC(LA(P))     &kp LC(LA(LBKT))
+&none              &kp LC(LA(N1))  &kp LC(LA(N2))  &kp LC(LA(N3))  &kp LC(LA(N4))  &kp LC(LA(T))                &kp LC(LA(N6))  &kp LC(LA(N7))  &kp LC(LA(N8))  &kp LC(LA(O))  &kp LC(LA(P))     &kp LC(LA(LBKT))
 &trans             &none           &kp LC(LA(S))   &kp LC(LA(D))   &kp LC(LA(F))   &kp LC(LA(G))                &kp LC(LA(H))   &kp LC(LA(J))   &kp LC(LA(K))   &kp LC(LA(L))  &none             &trans
 &kp LC(LA(MINUS))  &kp LC(LA(Z))   &kp LC(LA(X))   &none           &none           &kp LC(LA(B))                &kp LC(LA(N))   &kp LC(LA(M))   &none           &none          &kp LC(LA(FSLH))  &kp LC(LA(RBKT))
 &kp LC(LA(W))      &kp LC(LA(R))   &kp LC(LA(T))   &trans          &trans                        &trans         &trans                                                                           &none
@@ -406,7 +406,7 @@
             // Gui+Alt so the swap delivers Ctrl+Alt — zellij config
             // stays identical on both OSes.
             bindings = <
-&none              &kp LG(LA(N1))  &kp LG(LA(N2))  &kp LG(LA(N3))  &kp LG(LA(N4))  &kp LG(LA(N5))               &kp LG(LA(N6))  &kp LG(LA(N7))  &kp LG(LA(N8))  &kp LG(LA(O))  &kp LG(LA(P))     &kp LG(LA(LBKT))
+&none              &kp LG(LA(N1))  &kp LG(LA(N2))  &kp LG(LA(N3))  &kp LG(LA(N4))  &kp LG(LA(T))                &kp LG(LA(N6))  &kp LG(LA(N7))  &kp LG(LA(N8))  &kp LG(LA(O))  &kp LG(LA(P))     &kp LG(LA(LBKT))
 &trans             &none           &kp LG(LA(S))   &kp LG(LA(D))   &kp LG(LA(F))   &kp LG(LA(G))                &kp LG(LA(H))   &kp LG(LA(J))   &kp LG(LA(K))   &kp LG(LA(L))  &none             &trans
 &kp LG(LA(MINUS))  &kp LG(LA(Z))   &kp LG(LA(X))   &none           &none           &kp LG(LA(B))                &kp LG(LA(N))   &kp LG(LA(M))   &none           &none          &kp LG(LA(FSLH))  &kp LG(LA(RBKT))
 &kp LG(LA(W))      &kp LG(LA(R))   &kp LG(LA(T))   &trans          &trans                        &trans         &trans                                                                           &none
